@@ -1,0 +1,177 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Sala de Conferencia</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">		
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+		<!--[if lte IE 8]><script src="js/html5shiv.js"></script><![endif]-->
+		<script src="js/jquery.min.js"></script>
+		<script src="https://code.jquery.com/jquery-1.11.2.min.js" type="text/javascript"></script>
+		<script src="/socket.io/socket.io.js" type="text/javascript"></script>
+		<script src="js/skel.min.js"></script>
+		<script src="js/skel-layers.min.js"></script>
+		<script src="js/init.js"></script>
+        <script src="https://code.jquery.com/jquery-1.11.2.min.js" type="text/javascript"></script>
+		<script src="/socket.io/socket.io.js" type="text/javascript"></script>
+		<noscript>
+			<link rel="stylesheet" href="css/skel.css" />
+			<link rel="stylesheet" href="css/style.css" />
+			<link rel="stylesheet" href="css/style-xlarge.css" />
+		</noscript>
+	</head>
+	<body id="top">
+
+		<!-- Header -->
+			<header id="header" class="skel-layers-fixed">
+				<h1><a> Tech&Design </a></h1>
+				<nav id="nav">
+					<ul>
+						<li><a href="index.html">Inicio</a></li>
+						<li><a href="conference.html" class="button special">Sala de conferencia</a></li>
+					</ul>
+				</nav>
+			</header>
+
+		<!-- Main -->
+			<section id="main" class="wrapper style1">
+				
+                <header class="major">
+					<h2>Bienvenido</h2>
+					<p>Sala de conferencias Tech&Design </p>
+				</header>
+                
+				<div class="container">
+					<div class="row">
+						<div class="4u">
+							<section>
+								<h3>Chat</h3>
+                                <!--Bloque de Chat-->
+                                                  <div  class="container-fluid">
+			<section  style="padding: 1%;">			
+				<div class="row">
+					<form id="formChat" role="form" method="POST">
+						<div class="form-group">
+							<label for="user">Usuario</label>
+							<input type="text" class="form-control" id="user" name="user" placeholder="Tu nombre:">
+						</div>
+						<div class="form-group">							
+							<div class="row">
+								<div class="col-md-12" >
+									<div id="conversation" style="height:200px; border: 1px solid #CCCCCC; padding: 12px;  border-radius: 5px; overflow-x: hidden;">
+										
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">				
+							<label for="message">Mensaje</label>
+							<textarea id="message" name="message" placeholder="Escriba su mensaje:"  class="form-control" rows="3"></textarea>
+						</div>
+						<button id="send" class="btn btn-primary" >Enviar</button>						
+					</form>
+				</div>
+			</section>	
+		</div>
+                                <!--Bloque de Chat-->
+							</section>
+						</div>
+                        
+						<div class="8u skel-cell-important">
+							<section>
+								<h2>Streaming</h2>
+                                <center>
+                                	
+                                	<img id="play">
+		<div id="logger"></div>
+		<script type="text/javascript">
+		var socket = io();
+		socket.on('stream', function(image){
+			var img = document.getElementById("play");
+			img.src = image;
+
+			//$("#logger").text(image);
+
+		});
+		</script>
+
+                                </center>
+							</section>
+						</div>
+					</div>
+					
+				</div>
+			</section>
+
+		<!-- Footer -->
+			<footer id="footer">
+				<div class="container">
+					<div class="row double">
+						<div class="6u">
+							<div class="row collapse-at-2">
+                        <center><h2> Tech&Design </h2></center>
+						<div class="6u">
+							<ul class="icons">
+								<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+								<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+								<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
+								<li><a href="#" class="icon fa-linkedin"><span class="label">LinkedIn</span></a></li>
+								<li><a href="#" class="icon fa-pinterest"><span class="label">Pinterest</span></a></li>
+							</ul>
+						</div>
+					</div>
+					<ul class="copyright">
+						<li>&copy; Tech&Design. All rights reserved.</li>
+					</ul>
+				</div>
+			</footer>
+            
+            <!--Bloque de Scripts para Chat-->
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>		
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+		<script>
+		
+			$(document).on("ready", function(){				
+				registerMessages();
+				$.ajaxSetup({"cache":false});
+				setInterval("loadOldMessages()", 500);
+			});
+
+			var registerMessages = function(){
+				$("#send").on("click", function(e){
+					e.preventDefault();
+					var frm = $("#formChat").serialize();
+					console.log(frm);
+					$.ajax({
+						type: "POST",
+						url: "register.php",
+						data: frm
+					}).done(function(info){
+						$("#message").val("");
+						var altura = $("#conversation").prop("scrollHeight");
+						$("#conversation").scrollTop(altura);
+						console.log(info);
+					})
+				});
+			}
+
+			var loadOldMessages = function(){
+				$.ajax({
+					type: "POST",
+					url: "conversation.php"
+				}).done(function(info){
+					$("#conversation").html(info);
+					$("conversation p:last-child").css({"background-color" : "lightgreen"});
+					var altura = $("#conversation").prop("scrollHeight");
+					$("#conversation").scrollTop(altura);
+					
+				});
+			}
+			
+		</script>
+            <!--Bloque de Scripts para Chat-->
+            
+	</body>
+</html>
