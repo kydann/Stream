@@ -3,9 +3,6 @@ var app = new express();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
 
-var Log = require('Log'),
-	log = new Log('debug')
-
 var port = process.env.PORT || 3000;
 
 app.use(express.static(__dirname + "/"));
@@ -22,5 +19,5 @@ io.on('connection',function(socket){
 });
 
 http.listen(port,function(){
-	log.info('Servido escuchando a traves del puerto %s',port);
+	console.log('Servido escuchando a traves del puerto %s',port);
 });
